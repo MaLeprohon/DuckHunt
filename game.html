@@ -9,6 +9,7 @@ var canvas;
 var stage;
 var img;
 var bg;
+
 var score;
 var bmpList;
 var bitmap;
@@ -28,10 +29,10 @@ function init(){
 	score = 0;
 	shots =3;
 	
-	stage.addEventListener("click", shotFiredEvent);
+	canvas.addEventListener("click", shotFiredEvent);
 	
 	img = new Image();
-	img.src = "img/background.png";
+	img.src = "images/back.png";
 	img.onload = setBG;
 	
 	var duck = new Image();
@@ -59,6 +60,8 @@ function handleImageLoad(e){
 
 	stage.addChild(instance);
 }
+
+
 
 function createDucks(event){
 	var image = event.target;
@@ -92,6 +95,7 @@ function createDucks(event){
 	play = true;
 	createjs.Ticker.addEventListener("tick", handleTick);
 }
+
 
 function resetDuck(duck){
 	duck.x = canvas.width + Math.random() * 500;
@@ -167,7 +171,7 @@ function handleClick(){
 </head>
 
 <body onLoad="init();">
-<canvas id="canvas" width="960" height="580"></canvas>
+<canvas style="background:#68BEE8" id="canvas" width="900" height="500"></canvas>
 
 </body>
 </html>
