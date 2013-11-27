@@ -16,31 +16,42 @@ var txt;
 var gameTxt;
 var mouseTarget;
 var clicked;
+var theSprite = new Image();
+var instance;
+
+
 
 
 function init(){
 	canvas = document.getElementById("canvas");
 	stage = new createjs.Stage(canvas);
 	score = 0;
-	
-	canvas.onmousedown = onMouseDown;
-	canvas.onmouseup = onMouseUp;
 
 	img = new Image();
-	img2 = new Image();
-	img3 = new Image();
-	img.src = "img/sky.png";
-	img.src = "img/back.png";
-	img.src = "img/tree.png";
+	img.src = "img/background.png";
 	img.onload = setBG;
-	img2.onload = setBG;
-	img3.onload = setBG;
-	
-	
 	
 	var duck = new Image();
 	duck.src = "img/duck.png";
 	duck.onload = createDucks;
+	
+	theSprite.onload = handleImageLoad;
+	theSprite.src="img/theDuck.png";
+	
+}
+
+function handleImageLoad(e){
+	var data = {
+		images: ["img/theDuck.png"],
+		frames: {width: 75, height: 75},
+		animations: {fly:[0,11], shot:[12], die:[15,17]}
+	};
+	
+	var spriteSheet = new createjs.SpriteSheet(data);
+	instance = new createjs.Sprite(spriteSheet, "fly");
+
+
+	stage.addChild(instance);
 }
 
 function createDucks(event){
