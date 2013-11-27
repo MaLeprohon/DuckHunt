@@ -74,7 +74,7 @@ function createDucks(event){
 		bitmap.regX = bitmap.image.width /2|0;
 		bitmap.regY = bitmap.image.height/2|0;
 		bitmap.mouseEnabled = true;
-		bitmap.addEventListener("click", handleMouseEvent); 
+		bitmap.addEventListener("click", duckShotEvent); 
 		bmpList.push(bitmap);
 	}
 	txt = new createjs.Text("Score 0", "24px Arial", "#666");
@@ -107,7 +107,7 @@ function setBG(event){
 	//createjs.Ticker.addEventListener("tick", handleTick);
 }
 
-function handleMouseEvent(evt) {
+function duckShotEvent(evt) {
 	//alert(evt.target.name);
 	resetDuck(evt.target);
 	score +=50;
