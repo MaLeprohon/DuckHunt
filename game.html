@@ -13,20 +13,23 @@ var score;
 var bmpList;
 var bitmap;
 var txt;
+var shotsTxt;
+
 var gameTxt;
 var mouseTarget;
 var clicked;
 var theSprite = new Image();
 var instance;
-
-
-
+var shots;
 
 function init(){
 	canvas = document.getElementById("canvas");
 	stage = new createjs.Stage(canvas);
 	score = 0;
-
+	shots =3;
+	
+	stage.addEventListener("click", shotFiredEvent);
+	
 	img = new Image();
 	img.src = "img/background.png";
 	img.onload = setBG;
@@ -37,6 +40,8 @@ function init(){
 	
 	theSprite.onload = handleImageLoad;
 	theSprite.src="img/theDuck.png";
+	
+
 	
 }
 
@@ -76,6 +81,13 @@ function createDucks(event){
 	txt.x = 800;
 	txt.y = 20;
 	stage.addChild(txt);
+	
+	shotsTxt = new createjs.Text("Shots 3", "24px Arial", "#666");
+	shotsTxt.textBaseLine = "top";
+	shotsTxt.x = 0;
+	shotsTxt.y = 20;
+	stage.addChild(shotsTxt);
+	
 	play = true;
 	createjs.Ticker.addEventListener("tick", handleTick);
 }
@@ -95,14 +107,16 @@ function setBG(event){
 }
 
 function handleMouseEvent(evt) {
-      var duckName = evt.target.name.substring(0,4);
-	  if(duckName == "duck"){
-		 //alert(evt.target.name);
-		 resetDuck(evt.target);
-		 score +=50;
-		 clicked = false;
-		 stage.update();
-	  }
+	//alert(evt.target.name);
+	resetDuck(evt.target);
+	score +=50;
+	clicked = false;
+	stage.update();
+}
+
+function shotFiredEvent(evt)
+{
+	shots-=1;	
 }
 
 function handleTick(){
@@ -112,13 +126,15 @@ function handleTick(){
 			var bmp = bmpList[i];
 			if(bmp.x > -200){
 				bmp.x -= bmp.speed;
-			} else{
-				gameOver();
-				console.log("game over");
 			}
+		}
+		if(shots==0)
+		{
+			gameOver();	
 		}
 	}
 	txt.text = "Score: " + score;
+	shotsTxt.text = "Shots: " + shots;
 	stage.update();
 }
 
@@ -133,7 +149,7 @@ function gameOver(){
 	var l = bmpList.length;
 	for(var i=0; i<l; i++){
 		var bmp = bmpList[i];
-		resetEnemy(bmp);
+		resetDuck(bmp);
 	}
 	stage.update();
 	canvas.onclick = handleClick;
@@ -143,6 +159,7 @@ function handleClick(){
 	canvas.onclick = null;
 	stage.removeChild(gameTxt);
 	score = 0;	
+	shots = 3;
 	play = true;
 }
 </script>
