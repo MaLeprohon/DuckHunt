@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Duck hunt</title>
+<script src="lib/easeljs-0.7.0.min.js"></script>
+<script>
+var canvas;
+var stage;
+var img;
+var bg;
+var score;
+var bmpList;
+var bitmap;
+var txt;
+var gameTxt;
+var mouseTarget;
+var clicked;
+
+
+function init(){
+	canvas = document.getElementById("canvas");
+	stage = new createjs.Stage(canvas);
+	score = 0;
+	
+	canvas.onmousedown = onMouseDown;
+	canvas.onmouseup = onMouseUp;
+
+	img = new Image();
+	img2 = new Image();
+	img3 = new Image();
+	img.src = "img/sky.png";
+	img.src = "img/back.png";
+	img.src = "img/tree.png";
+	img.onload = setBG;
+	img2.onload = setBG;
+	img3.onload = setBG;
+	
+	
+	
+	var duck = new Image();
+	duck.src = "img/duck.png";
+	duck.onload = createDucks;
+}
+
+function createDucks(event){
+	var image = event.target;
+	var container = new createjs.Container();
+	stage.addChild(container);
+	var l = 5;
+	bmpList = [];
+	for(var i=0; i<l; i++){
+		bitmap = new createjs.Bitmap(image);
+		container.addChild(bitmap);
+		bitmap.name="duck" + i;
+		resetDuck(bitmap);
+		bitmap.regX = bitmap.image.width /2|0;
+		bitmap.regY = bitmap.image.height/2|0;
+		bitmap.mouseEnabled = true;
+		bitmap.addEventListener("click", handleMouseEvent); 
+		bmpList.push(bitmap);
+	}
+	txt = new createjs.Text("Score 0", "24px Arial", "#666");
+	txt.textBaseLine = "top";
+	txt.x = 800;
+	txt.y = 20;
+	stage.addChild(txt);
+	play = true;
+	createjs.Ticker.addEventListener("tick", handleTick);
+}
+
+function resetDuck(duck){
+	duck.x = canvas.width + Math.random() * 500;
+	duck.y = canvas.height * Math.random()|0;
+	duck.speed = (Math.random() * 5) + 2;
+}
+
+function setBG(event){
+	bg = new createjs.Bitmap(img);
+	stage.addChild(bg);
+	stage.addChild(text);
+	stage.update();
+	//createjs.Ticker.addEventListener("tick", handleTick);
+}
+
+function handleMouseEvent(evt) {
+      var duckName = evt.target.name.substring(0,4);
+	  if(duckName == "duck"){
+		 //alert(evt.target.name);
+		 resetDuck(evt.target);
+		 score +=50;
+		 clicked = false;
+		 stage.update();
+	  }
+}
+
+function handleTick(){
+	if(play == true){
+		var l = bmpList.length;
+		for(var i=0; i<l; i++){
+			var bmp = bmpList[i];
+			if(bmp.x > -200){
+				bmp.x -= bmp.speed;
+			} else{
+				gameOver();
+				console.log("game over");
+			}
+		}
+	}
+	txt.text = "Score: " + score;
+	stage.update();
+}
+
+function gameOver(){
+	gameTxt = new createjs.Text("Game Over\n\n", "36px Arial", "#666");
+	gameTxt.text += "Click to play again";
+	gameTxt.textAlign = "center";
+	gameTxt.x = canvas.width / 2;
+	gameTxt.y = canvas.height / 3;
+	stage.addChild(gameTxt);
+	play = false;
+	var l = bmpList.length;
+	for(var i=0; i<l; i++){
+		var bmp = bmpList[i];
+		resetEnemy(bmp);
+	}
+	stage.update();
+	canvas.onclick = handleClick;
+}
+
+function handleClick(){
+	canvas.onclick = null;
+	stage.removeChild(gameTxt);
+	score = 0;	
+	play = true;
+}
+
+function onMouseDown(){
+	if(!e){var e = window.event;}
+	clicked = true;	
+}
+
+function onMouseUp(){
+	clicked = false;	
+}
+
+</script>
+</head>
+
+<body onLoad="init();">
+<canvas id="canvas" width="960" height="580"></canvas>
+
+</body>
+</html>
