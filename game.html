@@ -38,6 +38,10 @@ function init(){
 	var duck = new Image();
 	duck.src = "img/duck.png";
 	duck.onload = createDucks;
+
+	var test = new Image();
+	test.src = "images/tree.png";
+	test.onload = addTree;
 	
 	
 	theSprite.src="img/theDuck.png";
@@ -45,6 +49,21 @@ function init(){
 	
 
 	
+}
+
+function addTree(event)
+{
+	var image = event.target;
+	var bitmap;
+	var container = new createjs.Container();
+	stage.addChild(container);
+
+	bitmap = new createjs.Bitmap(image);
+	container.addChild(bitmap);
+	bitmap.x = 280;
+	bitmap.y = 400;
+	bitmap.regX = bitmap.image.width;
+	bitmap.regY = bitmap.image.height;
 }
 
 function handleImageLoad(e){
@@ -171,7 +190,7 @@ function handleClick(){
 </head>
 
 <body onLoad="init();">
-<canvas style="background:#68BEE8" id="canvas" width="900" height="500"></canvas>
+<canvas style="border:2px solid; background:#3F9BE0" id="canvas" width="900" height="500"></canvas>
 
 </body>
 </html>
