@@ -83,14 +83,19 @@ function createDucks(event){
 	var data = {
 		images: [event.target],
 		frames: {width: 75, height: 75},
-		animations: {left:[0,1], shot:[12], die:[15,17]}
+		animations: {"flyingTopLeft":[0,2, "flyingTopLeft", 0.5],
+					 "flyingLeft":[9,10, "flyingLeft", 0.5],
+					 "flyingTopRight":[3,5, "flyingTopRight", 0.5],
+					 "flyingRight":[6,8, "flyingRight", 0.5],
+					  "shot":[12],
+					  "die":[15,17]}
 	};
 	var spriteSheet = new createjs.SpriteSheet(data);
 	
 	var l = 5;
 	bmpList = [];
 	for(var i=0; i<l; i++){
-		theDuck = new createjs.Sprite(spriteSheet, "left");
+		theDuck = new createjs.Sprite(spriteSheet, "flyingTopLeft");
 		theDuck.setTransform(250*Math.random(), 300*Math.random(), 1, 1);
 		theDuck.framerate = 30;
 		container.addChild(theDuck);
@@ -121,7 +126,7 @@ function setBG(event){
 function duckShotEvent(evt) {
 	//alert(evt.target.name);
 //	resetDuck(evt.target);
-	evt.target.g
+	evt.target.gotoAndPlay("flyingLeft");
 	score +=50;
 	clicked = false;
 	stage.update();
