@@ -24,11 +24,21 @@ var spriteSource = new Image();
 var theDuck;
 var shots;
 
+var speedX;
+var speedX2;
+var speedY;
+var speedY2;
+
 function init(){
 	canvas = document.getElementById("canvas");
 	stage = new createjs.Stage(canvas);
 	score = 0;
 	shots =3;
+	speedX=5;
+	speedY=-5;
+	speedX2=8;
+	speedY2=-4;
+	
 	
 	canvas.addEventListener("click", shotFiredEvent);
 	
@@ -95,8 +105,9 @@ function createDucks(event){
 	var l = 5;
 	bmpList = [];
 	for(var i=0; i<l; i++){
-		theDuck = new createjs.Sprite(spriteSheet, "flyingTopLeft");
-		theDuck.setTransform(250*Math.random(), 300*Math.random(), 1, 1);
+		theDuck = new createjs.Sprite(spriteSheet, "flyingTopRight");
+		//theDuck.setTransform(170, 330, 1, 1);
+		theDuck.setTransform(170, 330, 1, 1);
 		theDuck.framerate = 30;
 		container.addChild(theDuck);
 		
@@ -126,7 +137,7 @@ function setBG(event){
 function duckShotEvent(evt) {
 	//alert(evt.target.name);
 //	resetDuck(evt.target);
-	evt.target.gotoAndPlay("flyingLeft");
+	evt.target.gotoAndPlay("shot");
 	score +=50;
 	clicked = false;
 	stage.update();
@@ -139,16 +150,39 @@ function shotFiredEvent(evt)
 
 function handleTick(event){
 	if(play == true){
+		/*
 		var l = bmpList.length;
 		for(var i=0; i<l; i++){
 			var bmp = bmpList[i];
-			if(bmp.x > -100){
-				bmp.x -= 5;
+			bmp.x +=speedX+i;
+			bmp.y +=speedY-2*i;
+		/*	if(bmp.x > -100){
+				bmp.x -= speedX;
+				bmp.y +=speedY;
 			}
 			else{
-			resetDuck(bmp);	
+				resetDuck(bmp);	
 			}
 		}
+		*/
+		bmpList[0].x +=speedX;
+		bmpList[0].y +=speedY;
+		bmpList[1].x +=speedX2;
+		bmpList[1].y +=speedY2;
+		
+		var l = bmpList.length;
+		for(var i=0; i<l; i++){
+			var bmp = bmpList[i];
+			if(bmp.x > canvas.width-40)
+			{
+				bmp.x = !bmp.x;
+			}
+			if(bmp.y <0 || bmp.y > canvas.height)
+			{
+				speedY *=-1;
+			}
+		}
+		
 		if(shots==0)
 		{
 			gameOver();	
