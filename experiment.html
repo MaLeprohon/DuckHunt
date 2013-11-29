@@ -33,15 +33,12 @@ function init(){
 	canvas.addEventListener("click", shotFiredEvent);
 	
 	img = new Image();
-	img.src = "images/back.png";
+	img.src = "images/back2.png";
 	img.onload = setBG;
 	
 	var duck = new Image();
-	duck.src = "img/duck.png";
+	duck.src = "img/theDuck.png";
 	duck.onload = createDucks;
-	
-	spriteSource.src="img/theDuck.png";
-	spriteSource.onload = handleImageLoad;
 
 	var test = new Image();
 	test.src = "images/largeTree.png";
@@ -66,52 +63,41 @@ function addTreeAndText(event)
 	bitmap.regX = bitmap.image.width;
 	bitmap.regY = bitmap.image.height;
 	
-	scoreTxt = new createjs.Text("Score 0", "24px Arial", "#000");
+	scoreTxt = new createjs.Text("Score 0", "24px Arial", "#FFF");
 	scoreTxt.textBaseLine = "top";
-	scoreTxt.x = 700;
-	scoreTxt.y = 20;
+	scoreTxt.x = 755;
+	scoreTxt.y = 460;
 	container.addChild(scoreTxt);
 	
-	shotsTxt = new createjs.Text("Shots 3", "24px Arial", "#000");
+	shotsTxt = new createjs.Text("Shots 3", "24px Arial", "#FFF");
 	shotsTxt.textBaseLine = "top";
-	shotsTxt.x = 20;
-	shotsTxt.y = 20;
+	shotsTxt.x = 120;
+	shotsTxt.y = 460;
 	container.addChild(shotsTxt);
 }
 
-function handleImageLoad(e){
-	var data = {
-		images: [e.target],
-		frames: {width: 75, height: 75},
-		animations: {fly:[1,3], shot:[12], die:[15,17]}
-	};
-	
-	var spriteSheet = new createjs.SpriteSheet(data);
-	theDuck = new createjs.Sprite(spriteSheet, "fly");
-//start from here	theDuck.setTransform(170, 330, 1, 1);
-	theDuck.setTransform(250, 300, 1, 1);
-	theDuck.framerate = 30;
-
-	stage.addChild(theDuck);
-	createjs.Ticker.addEventListener("tick", handleTick);
-}
-
 function createDucks(event){
-	var image = event.target;
 	var container = new createjs.Container();
 	stage.addChild(container);
+	
+	var data = {
+		images: [event.target],
+		frames: {width: 75, height: 75},
+		animations: {left:[0,1], shot:[12], die:[15,17]}
+	};
+	var spriteSheet = new createjs.SpriteSheet(data);
+	
 	var l = 5;
 	bmpList = [];
 	for(var i=0; i<l; i++){
-		bitmap = new createjs.Bitmap(image);
-		container.addChild(bitmap);
-		bitmap.name="duck" + i;
-		resetDuck(bitmap);
-		bitmap.regX = bitmap.image.width /2|0;
-		bitmap.regY = bitmap.image.height/2|0;
-		bitmap.mouseEnabled = true;
-		bitmap.addEventListener("click", duckShotEvent); 
-		bmpList.push(bitmap);
+		theDuck = new createjs.Sprite(spriteSheet, "left");
+		theDuck.setTransform(250*Math.random(), 300*Math.random(), 1, 1);
+		theDuck.framerate = 30;
+		container.addChild(theDuck);
+		
+		theDuck.mouseEnabled = true;
+		theDuck.addEventListener("click", duckShotEvent); 
+		bmpList.push(theDuck);
 	}
 	
 	play = true;
@@ -134,7 +120,8 @@ function setBG(event){
 
 function duckShotEvent(evt) {
 	//alert(evt.target.name);
-	resetDuck(evt.target);
+//	resetDuck(evt.target);
+	evt.target.g
 	score +=50;
 	clicked = false;
 	stage.update();
@@ -150,8 +137,11 @@ function handleTick(event){
 		var l = bmpList.length;
 		for(var i=0; i<l; i++){
 			var bmp = bmpList[i];
-			if(bmp.x > -200){
-				bmp.x -= bmp.speed;
+			if(bmp.x > -100){
+				bmp.x -= 5;
+			}
+			else{
+			resetDuck(bmp);	
 			}
 		}
 		if(shots==0)
@@ -159,13 +149,8 @@ function handleTick(event){
 			gameOver();	
 		}
 	}
-	scoreTxt.text = "Score: " + score;
-	shotsTxt.text = "Shots: " + shots;
-	
-	theDuck.x+=5;
-	if(theDuck.x > canvas.width){
-		theDuck.x = 0;	
-	}
+	scoreTxt.text =  score;
+	shotsTxt.text =  shots;
 	stage.update(event);
 }
 
@@ -198,7 +183,7 @@ function handleClick(){
 </head>
 
 <body onLoad="init();">
-<canvas style="border:2px solid; background:#62c0d3" id="canvas" width="900" height="500"></canvas>
+<canvas style="border:2px solid; background:#62c0d3" id="canvas" width="900" height="542"></canvas>
 
 </body>
 </html>

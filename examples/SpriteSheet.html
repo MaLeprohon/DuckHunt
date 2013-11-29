@@ -100,14 +100,14 @@
 		stage.addEventListener("stagemousedown", handleJumpStart);
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		createjs.Ticker.addEventListener("tick", tick);
+		createjs.Ticker.addEventListener("tick", tickHandler);
 	}
 
 	function handleJumpStart() {
 		grant.gotoAndPlay("jump");
 	}
 
-	function tick(event) {
+	function tickHandler(event) {
 		var deltaS = event.delta/1000;
 		var position = grant.x+150*deltaS;
 		
