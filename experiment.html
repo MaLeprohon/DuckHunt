@@ -26,8 +26,10 @@ var shots;
 
 var speedX;
 var speedX2;
+var speedX3;
 var speedY;
 var speedY2;
+var speedY3;
 
 function init(){
 	canvas = document.getElementById("canvas");
@@ -38,17 +40,22 @@ function init(){
 	speedY=-5;
 	speedX2=8;
 	speedY2=-4;
+	speedX3=7;
+	speedY3=-2;
+	
 	
 	
 	canvas.addEventListener("click", shotFiredEvent);
+	
+	var duck = new Image();
+	duck.src = "img/theDuck.png";
+	duck.onload = createDucks;
 	
 	img = new Image();
 	img.src = "images/back2.png";
 	img.onload = setBG;
 	
-	var duck = new Image();
-	duck.src = "img/theDuck.png";
-	duck.onload = createDucks;
+
 
 	var test = new Image();
 	test.src = "images/largeTree.png";
@@ -102,7 +109,7 @@ function createDucks(event){
 	};
 	var spriteSheet = new createjs.SpriteSheet(data);
 	
-	var l = 5;
+	var l = 3;
 	bmpList = [];
 	for(var i=0; i<l; i++){
 		theDuck = new createjs.Sprite(spriteSheet, "flyingTopRight");
@@ -138,8 +145,20 @@ function duckShotEvent(evt) {
 	//alert(evt.target.name);
 //	resetDuck(evt.target);
 	evt.target.gotoAndPlay("shot");
+	evt.target.framerate = 0;
 	score +=50;
-	clicked = false;
+	var xPos = evt.target.x;
+	var yPos = evt.target.y;
+	
+	setTimeout(function() { duckDie(evt.target) }, 1000);
+	evt.target.x -= 5;
+	
+	stage.update();
+}
+
+function duckDie(duck){
+	duck.gotoAndPlay("die");
+
 	stage.update();
 }
 
@@ -165,11 +184,47 @@ function handleTick(event){
 			}
 		}
 		*/
-		bmpList[0].x +=speedX;
-		bmpList[0].y +=speedY;
-		bmpList[1].x +=speedX2;
-		bmpList[1].y +=speedY2;
+					//alert(bmpList[0].currentAnimation);
+
+		var anim = 	bmpList[0].currentAnimation;
+		var anim2 = bmpList[1].currentAnimation;
+		var anim3 = bmpList[2].currentAnimation;
 		
+		//duck1
+		if(anim == "shot"){
+			bmpList[0].x = bmpList[0].x;
+			bmpList[0].y = bmpList[0].y;
+			
+		} else if(anim == "die"){
+			bmpList[0].y +=10;
+		} else{
+			bmpList[0].x +=speedX;
+			bmpList[0].y +=speedY;
+		}
+		//duck2
+		if(anim2 == "shot"){
+			bmpList[1].x = bmpList[1].x;
+			bmpList[1].y = bmpList[1].y;
+			
+		} else if(anim2 == "die"){
+			bmpList[1].y +=10;
+		} else{
+			bmpList[1].x +=speedX2;
+			bmpList[1].y +=speedY2;
+		}
+		
+		//duck3
+		if(anim3 == "shot"){
+			bmpList[2].x = bmpList[2].x;
+			bmpList[2].y = bmpList[2].y;
+			
+		} else if(anim3 == "die"){
+			bmpList[2].y +=10;
+		} else{
+			bmpList[2].x +=speedX3;
+			bmpList[2].y +=speedY3;
+		}
+
 		var l = bmpList.length;
 		for(var i=0; i<l; i++){
 			var bmp = bmpList[i];
