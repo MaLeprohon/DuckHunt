@@ -135,13 +135,13 @@ function createDucks(event){
 	for(var i=0; i<l; i++){
 		theDuck = new createjs.Sprite(spriteSheet, "flyingTopRight");
 			
-		speedX[i] = (Math.random() * 7) + 6;
-		speedY[i] = (Math.random() * 5) + 10;
+		speedX[i] = (Math.random() * 24)%10 + 12;
+		speedY[i] = (Math.random() * 15)%8 + 8;
 		var clickable = new createjs.Shape();
 		clickable.graphics.beginFill("#000").drawRect(0,0,200,200);
 		theDuck.hitArea = clickable;
 		//theDuck.setTransform(170, 330, 1, 1);
-		theDuck.setTransform(280, 280, 1, 1);
+		theDuck.setTransform(170, 280, 1, 1);
 		theDuck.framerate = 30;
 		container.addChild(theDuck);
 		theDuck.name = i;
@@ -159,8 +159,8 @@ function createDucks(event){
 function resetDuck(duck){
 	duck.stop();
 	duck.setTransform(280, 280, 1, 1);
-	speedX[duck.name] = (Math.random() * 7) + 6;
-	speedY[duck.name] = (Math.random() * 5) + 10;
+	speedY[duck.name] = (Math.random() * 24)%10 + 12;
+	speedX[duck.name] = (Math.random() * 15)%8 + 8;
 	duck.gotoAndPlay("flyingTopRight"); 
 	duck.addEventListener("click",duckShotEvent);
 }
