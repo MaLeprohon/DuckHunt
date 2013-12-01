@@ -158,7 +158,6 @@ function duckShotEvent(evt) {
 
 function duckDie(duck){
 	duck.gotoAndPlay("die");
-
 	stage.update();
 }
 
@@ -194,9 +193,11 @@ function handleTick(event){
 		if(anim == "shot"){
 			bmpList[0].x = bmpList[0].x;
 			bmpList[0].y = bmpList[0].y;
+			bmpList[0].removeEventListener("click", duckShotEvent);
 			
 		} else if(anim == "die"){
 			bmpList[0].y +=10;
+			bmpList[0].removeEventListener("click", duckShotEvent);
 		} else{
 			bmpList[0].x +=speedX;
 			bmpList[0].y +=speedY;
@@ -205,9 +206,11 @@ function handleTick(event){
 		if(anim2 == "shot"){
 			bmpList[1].x = bmpList[1].x;
 			bmpList[1].y = bmpList[1].y;
+			bmpList[1].removeEventListener("click", duckShotEvent);
 			
 		} else if(anim2 == "die"){
 			bmpList[1].y +=10;
+			bmpList[1].removeEventListener("click", duckShotEvent);
 		} else{
 			bmpList[1].x +=speedX2;
 			bmpList[1].y +=speedY2;
@@ -217,9 +220,11 @@ function handleTick(event){
 		if(anim3 == "shot"){
 			bmpList[2].x = bmpList[2].x;
 			bmpList[2].y = bmpList[2].y;
+			bmpList[2].removeEventListener("click", duckShotEvent);
 			
 		} else if(anim3 == "die"){
 			bmpList[2].y +=10;
+			bmpList[2].removeEventListener("click", duckShotEvent);
 		} else{
 			bmpList[2].x +=speedX3;
 			bmpList[2].y +=speedY3;
