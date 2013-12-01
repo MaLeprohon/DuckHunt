@@ -40,7 +40,6 @@ var started;
 var started2;
 var started2;
 
-var animationList;
 var speedX;
 var speedY;
 
@@ -59,6 +58,7 @@ function init(){
 	speedY[1] = -9;
 	speedY[2] = -12;
 	
+	
 	speedX2=8;
 	speedY2=-4;
 	speedX3=7;
@@ -66,7 +66,6 @@ function init(){
 	
 	
 	deathTimer =[];
-	animationList =[];
 	isMovingUp=[];
 	
 	canvas.addEventListener("click", shotFiredEvent);
@@ -84,18 +83,6 @@ function init(){
 	var test = new Image();
 	test.src = "images/largeTree.png";
 	test.onload = addTreeAndText;
-	
-	//animationList
-	//0 = flyingTopLeft 1 = flyingLeft 
-	//2 = flyingTopRight 3 = flyingRight
-	//4 = shot 5 = die
-	
-	animationList[0] = "flyingTopLeft";
-	animationList[1] = "flyingLeft";
-	animationList[2] = "flyingTopRight";
-	animationList[3] = "flyingRight";
-	animationList[4] = "shot";
-	animationList[5] = "die";
 	
 	
 }
@@ -147,7 +134,9 @@ function createDucks(event){
 	bmpList = [];
 	for(var i=0; i<l; i++){
 		theDuck = new createjs.Sprite(spriteSheet, "flyingTopRight");
-		
+			
+		speedX[i] = (Math.random() * 7) + 6;
+		speedY[i] = (Math.random() * 5) + 10;
 		var clickable = new createjs.Shape();
 		clickable.graphics.beginFill("#000").drawRect(0,0,200,200);
 		theDuck.hitArea = clickable;
@@ -170,7 +159,8 @@ function createDucks(event){
 function resetDuck(duck){
 	duck.stop();
 	duck.setTransform(280, 280, 1, 1);
-	duck.speed = (Math.random() * 5) + 2;
+	speedX[duck.name] = (Math.random() * 7) + 6;
+	speedY[duck.name] = (Math.random() * 5) + 10;
 	duck.gotoAndPlay("flyingTopRight"); 
 	duck.addEventListener("click",duckShotEvent);
 }
@@ -185,19 +175,20 @@ function setBG(event){
 function duckShotEvent(evt) {
 	//alert(evt.target.name);
 //	resetDuck(evt.target);
-	evt.target.gotoAndPlay("shot");
+//	evt.target.gotoAndPlay("shot");
+	speedX[evt.target.name] =0;
+	speedY[evt.target.name] =0;
 	evt.target.framerate = 30;
 	score +=50;
 	var xPos = evt.target.x;
 	var yPos = evt.target.y;
-	
-	deathTimer[evt.target.name] = setTimeout(function() { duckDie(evt.target) }, 1000);
-	evt.target.x -= 5;
+
 	stage.update();
 }
 
 function duckDie(duck){
 	duck.gotoAndPlay("die");
+	speedY[duck.name] = 20;
 	stage.update();
 }
 
@@ -208,13 +199,6 @@ function shotFiredEvent(evt)
 
 function handleTick(event){
 	if(play == true){
-		
-		//animationList
-		//0 = flyingTopLeft 1 = flyingLeft 
-		//2 = flyingTopRight 3 = flyingRight
-		//4 = shot 5 = die
-		
-		
 		var l = bmpList.length;
 		for(var i=0; i<l; i++){
 			var bmp = bmpList[i];
@@ -232,26 +216,62 @@ function handleTick(event){
 	shotsTxt.text =  shots;
 	stage.update(event);
 }
+function checkAnimations(duck)
+{
+	if(speedX[duck.name]==0 && speedY[duck.name]==0 && duck.currentAnimation != "shot")
+	{
+		duck.stop();
+		duck.gotoAndPlay("shot");
+        duck.removeEventListener("click", duckShotEvent);
+		deathTimer[duck.name] = setTimeout(function() { duckDie(duck) }, 1000);
+		duck.x -= 5;
+	}
+	else if(speedY[duck.name] ==20)
+	{
+        duck.removeEventListener("click", duckShotEvent);
+	}
+	else if(speedX[duck.name]>0 && speedY[duck.name] <0 && duck.currentAnimation != "flyingTopRight")
+	{
+		duck.stop();
+		duck.gotoAndPlay("flyingTopRight");
+	}
+	else if( speedX[duck.name]<0 && speedY[duck.name] <0 && duck.currentAnimation != "flyingTopLeft")
+	{
+		duck.stop();
+		duck.gotoAndPlay("flyingTopLeft");
+	}
+	else if (speedX[duck.name]<0 && speedY[duck.name]>0 && duck.currentAnimation != "flyingLeft")
+	{
+		duck.stop();
+		duck.gotoAndPlay("flyingLeft");
+	}
+	else if (speedX[duck.name]>0 && speedY[duck.name]>0 && duck.currentAnimation != "flyingRight")
+	{
+		duck.stop();
+		duck.gotoAndPlay("flyingRight");
+	}
+}
 
 function checkDirection(duck)
 {
-	if(duck.x > canvas.width-90)
+	if(duck.x > canvas.width-90 && speedY[duck.name]!=20)
 	{
 		speedX[duck.name] *=-1;
 	}
-	else if(duck.x <0)
+	else if(duck.x <0 && speedY[duck.name]!=20)
 	{
 		speedX[duck.name] *= -1;
 	}
 	
-	if(duck.y <0)
+	if(duck.y <0 && speedY[duck.name]!=20)
 	{
 		speedY[duck.name] *= -1;	
 	}
-	else if(duck.y >300)
+	else if(duck.y >300 && speedY[duck.name]!=20)
 	{
 		speedY[duck.name] *=-1;	
 	}
+	checkAnimations(duck);
 }
 
 function startAnim(duck, anim){
