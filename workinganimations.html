@@ -124,7 +124,7 @@ function createDucks(event){
 		clickable.graphics.beginFill("#000").drawRect(0,0,200,200);
 		theDuck.hitArea = clickable;
 		//theDuck.setTransform(170, 330, 1, 1);
-		theDuck.setTransform(170, 280, 1, 1);
+		theDuck.setTransform(170, 280-(i*15), 1, 1);
 		theDuck.framerate = 30;
 		container.addChild(theDuck);
 		theDuck.name = i;
@@ -141,7 +141,7 @@ function createDucks(event){
 
 function resetDuck(duck){
 	duck.stop();
-	duck.setTransform(280, 280, 1, 1);
+	duck.setTransform(170, 280-(duck.name*19), 1, 1);
 	speedY[duck.name] = (Math.random() * 24)%10 + 12;
 	speedX[duck.name] = (Math.random() * 15)%8 + 8;
 	duck.gotoAndPlay("flyingTopRight"); 
