@@ -113,6 +113,10 @@ function createDucks(event){
 	bmpList = [];
 	for(var i=0; i<l; i++){
 		theDuck = new createjs.Sprite(spriteSheet, "flyingTopRight");
+		
+		var clickable = new createjs.Shape();
+		clickable.graphics.beginFill("#000").drawRect(0,0,200,200);
+		theDuck.hitArea = clickable;
 		//theDuck.setTransform(170, 330, 1, 1);
 		theDuck.setTransform(170, 330, 1, 1);
 		theDuck.framerate = 30;
