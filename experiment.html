@@ -23,6 +23,7 @@ var spriteSource = new Image();
 
 var theDuck;
 var shots;
+var deathTimer;
 
 var speedX;
 var speedX2;
@@ -43,6 +44,8 @@ function init(){
 	speedX3=7;
 	speedY3=-2;
 	
+	
+	deathTimer =[];
 	
 	
 	canvas.addEventListener("click", shotFiredEvent);
@@ -118,10 +121,10 @@ function createDucks(event){
 		clickable.graphics.beginFill("#000").drawRect(0,0,200,200);
 		theDuck.hitArea = clickable;
 		//theDuck.setTransform(170, 330, 1, 1);
-		theDuck.setTransform(170, 330, 1, 1);
+		theDuck.setTransform(280, 280, 1, 1);
 		theDuck.framerate = 30;
 		container.addChild(theDuck);
-		
+		theDuck.name = i;
 		theDuck.mouseEnabled = true;
 		theDuck.addEventListener("click", duckShotEvent); 
 		bmpList.push(theDuck);
@@ -133,9 +136,11 @@ function createDucks(event){
 
 
 function resetDuck(duck){
-	duck.x = canvas.width + Math.random() * 500;
-	duck.y = canvas.height * Math.random() | 0;
+	duck.stop();
+	duck.setTransform(280, 280, 1, 1);
 	duck.speed = (Math.random() * 5) + 2;
+	duck.gotoAndPlay("flyingTopRight"); 
+	duck.addEventListener("click",duckShotEvent);
 }
 
 function setBG(event){
@@ -149,14 +154,13 @@ function duckShotEvent(evt) {
 	//alert(evt.target.name);
 //	resetDuck(evt.target);
 	evt.target.gotoAndPlay("shot");
-	evt.target.framerate = 0;
+	evt.target.framerate = 30;
 	score +=50;
 	var xPos = evt.target.x;
 	var yPos = evt.target.y;
 	
-	setTimeout(function() { duckDie(evt.target) }, 1000);
+	deathTimer[evt.target.name] = setTimeout(function() { duckDie(evt.target) }, 1000);
 	evt.target.x -= 5;
-	
 	stage.update();
 }
 
@@ -269,6 +273,7 @@ function gameOver(){
 	var l = bmpList.length;
 	for(var i=0; i<l; i++){
 		var bmp = bmpList[i];
+		clearTimeout(deathTimer[i]);
 		resetDuck(bmp);
 	}
 	stage.update();
