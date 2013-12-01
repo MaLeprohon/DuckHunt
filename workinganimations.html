@@ -18,27 +18,10 @@ var shotsTxt;
 
 var gameTxt;
 var mouseTarget;
-var clicked;
-var spriteSource = new Image();
 
 var theDuck;
 var shots;
 var deathTimer;
-
-
-var speedX2;
-var speedX3;
-
-var speedY2;
-var speedY3;
-
-var reachedRight = false;
-var reachedRight2 = false;
-var reachedRight3 = false;
-
-var started;
-var started2;
-var started2;
 
 var speedX;
 var speedY;
@@ -274,12 +257,6 @@ function checkDirection(duck)
 	checkAnimations(duck);
 }
 
-function startAnim(duck, anim){
-	if(started == false){
-		duck.gotoAndPlay(anim);	
-		started=true;
-	}
-}
 
 function gameOver(){
 	gameTxt = new createjs.Text("Game Over\n\n", "36px Arial", "#666");
