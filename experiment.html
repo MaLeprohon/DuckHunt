@@ -32,6 +32,16 @@ var speedY;
 var speedY2;
 var speedY3;
 
+var reachedRight = false;
+var reachedRight2 = false;
+var reachedRight3 = false;
+
+var started;
+var started2;
+var started2;
+
+
+
 function init(){
 	canvas = document.getElementById("canvas");
 	stage = new createjs.Stage(canvas);
@@ -206,9 +216,25 @@ function handleTick(event){
 		} else if(anim == "die"){
 			bmpList[0].y +=10;
 			bmpList[0].removeEventListener("click", duckShotEvent);
-		} else{
+		} 
+		
+		if(bmpList[0].x > canvas.width-75){
+			reachedRight = true;
+			started = false;
+		}
+		if(bmpList[0].x < 75){
+			reachedRight = false;
+			started = false;
+		}
+		
+		if(reachedRight == false){
 			bmpList[0].x +=speedX;
 			bmpList[0].y +=speedY;
+			startAnim(bmpList[0], "flyingTopRight");
+		} else if (reachedRight == true){
+			bmpList[0].x -=speedX;
+			bmpList[0].y +=speedY;
+			startAnim(bmpList[0], "flyingTopLeft");
 		}
 		//duck2
 		if(anim2 == "shot"){
@@ -219,9 +245,25 @@ function handleTick(event){
 		} else if(anim2 == "die"){
 			bmpList[1].y +=10;
 			bmpList[1].removeEventListener("click", duckShotEvent);
-		} else{
+		} 
+		
+		if(bmpList[1].x > canvas.width-75){
+			reachedRight2 = true;
+			started2 = false;
+		}
+		if(bmpList[1].x < 75){
+			reachedRight2 = false;
+			started2 = false;
+		}
+		
+		if(reachedRight2 == false){
 			bmpList[1].x +=speedX2;
 			bmpList[1].y +=speedY2;
+			startAnim(bmpList[1], "flyingTopRight");
+		} else if (reachedRight2 == true){
+			bmpList[1].x -=speedX2;
+			bmpList[1].y +=speedY2;
+			startAnim(bmpList[1], "flyingTopLeft");
 		}
 		
 		//duck3
@@ -233,11 +275,26 @@ function handleTick(event){
 		} else if(anim3 == "die"){
 			bmpList[2].y +=10;
 			bmpList[2].removeEventListener("click", duckShotEvent);
-		} else{
+		} 
+		if(bmpList[2].x > canvas.width-75){
+			reachedRight3 = true;
+			started3 = false;
+		}
+		if(bmpList[2].x < 75){
+			reachedRight3 = false;
+			started3 = false;
+		}
+		
+		if(reachedRight3 == false){
 			bmpList[2].x +=speedX3;
 			bmpList[2].y +=speedY3;
+			startAnim(bmpList[2], "flyingTopRight");
+		} else if (reachedRight3 == true){
+			bmpList[2].x -=speedX3;
+			bmpList[2].y +=speedY3;
+			startAnim(bmpList[2], "flyingTopLeft");
 		}
-
+		
 		var l = bmpList.length;
 		for(var i=0; i<l; i++){
 			var bmp = bmpList[i];
@@ -261,6 +318,12 @@ function handleTick(event){
 	stage.update(event);
 }
 
+function startAnim(duck, anim){
+	if(started == false){
+		duck.gotoAndPlay(anim);	
+		started=true;
+	}
+}
 
 function gameOver(){
 	gameTxt = new createjs.Text("Game Over\n\n", "36px Arial", "#666");
