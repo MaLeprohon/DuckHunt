@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Duck hunt</title>
+<script src="lib/easeljs-0.7.0.min.js"></script>
+<script>
+var canvas;
+var stage;
+var img;
+var bg;
+
+var score;
+var bmpList;
+var bitmap;
+var scoreTxt;
+var shotsTxt;
+
+var gameTxt;
+var mouseTarget;
+var clicked;
+var spriteSource = new Image();
+
+var theDuck;
+var shots;
+var deathTimer;
+
+
+var speedX2;
+var speedX3;
+
+var speedY2;
+var speedY3;
+
+var reachedRight = false;
+var reachedRight2 = false;
+var reachedRight3 = false;
+
+var started;
+var started2;
+var started2;
+
+var animationList;
+var speedX;
+var speedY;
+
+function init(){
+	canvas = document.getElementById("canvas");
+	stage = new createjs.Stage(canvas);
+	score = 0;
+	shots =3;
+	speedX=[];
+	speedY=[];
+	speedX[0] = 6;
+	speedX[1] = 9;
+	speedX[2] = 12;
+	
+	speedY[0] = -6;
+	speedY[1] = -9;
+	speedY[2] = -12;
+	
+	speedX2=8;
+	speedY2=-4;
+	speedX3=7;
+	speedY3=-2;
+	
+	
+	deathTimer =[];
+	animationList =[];
+	isMovingUp=[];
+	
+	canvas.addEventListener("click", shotFiredEvent);
+	
+	var duck = new Image();
+	duck.src = "img/theDuck.png";
+	duck.onload = createDucks;
+	
+	img = new Image();
+	img.src = "images/back2.png";
+	img.onload = setBG;
+	
+
+
+	var test = new Image();
+	test.src = "images/largeTree.png";
+	test.onload = addTreeAndText;
+	
+	//animationList
+	//0 = flyingTopLeft 1 = flyingLeft 
+	//2 = flyingTopRight 3 = flyingRight
+	//4 = shot 5 = die
+	
+	animationList[0] = "flyingTopLeft";
+	animationList[1] = "flyingLeft";
+	animationList[2] = "flyingTopRight";
+	animationList[3] = "flyingRight";
+	animationList[4] = "shot";
+	animationList[5] = "die";
+	
+	
+}
+
+function addTreeAndText(event)
+{
+	var image = event.target;
+	var bitmap;
+	var container = new createjs.Container();
+	stage.addChild(container);
+
+	bitmap = new createjs.Bitmap(image);
+	container.addChild(bitmap);
+	bitmap.x = 340;
+	bitmap.y = 415;
+	bitmap.regX = bitmap.image.width;
+	bitmap.regY = bitmap.image.height;
+	
+	scoreTxt = new createjs.Text("Score 0", "24px Arial", "#FFF");
+	scoreTxt.textBaseLine = "top";
+	scoreTxt.x = 755;
+	scoreTxt.y = 460;
+	container.addChild(scoreTxt);
+	
+	shotsTxt = new createjs.Text("Shots 3", "24px Arial", "#FFF");
+	shotsTxt.textBaseLine = "top";
+	shotsTxt.x = 120;
+	shotsTxt.y = 460;
+	container.addChild(shotsTxt);
+}
+
+function createDucks(event){
+	var container = new createjs.Container();
+	stage.addChild(container);
+	
+	var data = {
+		images: [event.target],
+		frames: {width: 75, height: 73},
+		animations: {"flyingTopLeft":[0,2, "flyingTopLeft", 0.5],
+					 "flyingLeft":[9,10, "flyingLeft", 0.5],
+					 "flyingTopRight":[3,5, "flyingTopRight", 0.5],
+					 "flyingRight":[6,8, "flyingRight", 0.5],
+					  "shot":[12],
+					  "die":[15,17]}
+	};
+	var spriteSheet = new createjs.SpriteSheet(data);
+	
+	var l = 3;
+	bmpList = [];
+	for(var i=0; i<l; i++){
+		theDuck = new createjs.Sprite(spriteSheet, "flyingTopRight");
+		
+		var clickable = new createjs.Shape();
+		clickable.graphics.beginFill("#000").drawRect(0,0,200,200);
+		theDuck.hitArea = clickable;
+		//theDuck.setTransform(170, 330, 1, 1);
+		theDuck.setTransform(280, 280, 1, 1);
+		theDuck.framerate = 30;
+		container.addChild(theDuck);
+		theDuck.name = i;
+		theDuck.mouseEnabled = true;
+		theDuck.addEventListener("click", duckShotEvent); 
+		bmpList.push(theDuck);
+		isMovingUp[theDuck.name] = true;
+	}
+	
+	play = true;
+	createjs.Ticker.addEventListener("tick", handleTick);
+}
+
+
+function resetDuck(duck){
+	duck.stop();
+	duck.setTransform(280, 280, 1, 1);
+	duck.speed = (Math.random() * 5) + 2;
+	duck.gotoAndPlay("flyingTopRight"); 
+	duck.addEventListener("click",duckShotEvent);
+}
+
+function setBG(event){
+	bg = new createjs.Bitmap(img);
+	stage.addChild(bg);
+	stage.addChild(text);
+	stage.update();
+}
+
+function duckShotEvent(evt) {
+	//alert(evt.target.name);
+//	resetDuck(evt.target);
+	evt.target.gotoAndPlay("shot");
+	evt.target.framerate = 30;
+	score +=50;
+	var xPos = evt.target.x;
+	var yPos = evt.target.y;
+	
+	deathTimer[evt.target.name] = setTimeout(function() { duckDie(evt.target) }, 1000);
+	evt.target.x -= 5;
+	stage.update();
+}
+
+function duckDie(duck){
+	duck.gotoAndPlay("die");
+	stage.update();
+}
+
+function shotFiredEvent(evt)
+{
+	shots-=1;	
+}
+
+function handleTick(event){
+	if(play == true){
+		
+		//animationList
+		//0 = flyingTopLeft 1 = flyingLeft 
+		//2 = flyingTopRight 3 = flyingRight
+		//4 = shot 5 = die
+		
+		
+		var l = bmpList.length;
+		for(var i=0; i<l; i++){
+			var bmp = bmpList[i];
+			checkDirection(bmp);
+			bmp.x +=speedX[bmp.name];
+			bmp.y +=speedY[bmp.name];
+		}
+		
+		if(shots==0)
+		{
+			gameOver();	
+		}
+	}
+	scoreTxt.text =  score;
+	shotsTxt.text =  shots;
+	stage.update(event);
+}
+
+function checkDirection(duck)
+{
+	if(duck.x > canvas.width-90)
+	{
+		speedX[duck.name] *=-1;
+	}
+	else if(duck.x <0)
+	{
+		speedX[duck.name] *= -1;
+	}
+	
+	if(duck.y <0)
+	{
+		speedY[duck.name] *= -1;	
+	}
+	else if(duck.y >300)
+	{
+		speedY[duck.name] *=-1;	
+	}
+}
+
+function startAnim(duck, anim){
+	if(started == false){
+		duck.gotoAndPlay(anim);	
+		started=true;
+	}
+}
+
+function gameOver(){
+	gameTxt = new createjs.Text("Game Over\n\n", "36px Arial", "#666");
+	gameTxt.text += "Click to play again";
+	gameTxt.textAlign = "center";
+	gameTxt.x = canvas.width / 2;
+	gameTxt.y = canvas.height / 3;
+	stage.addChild(gameTxt);
+	play = false;
+	var l = bmpList.length;
+	for(var i=0; i<l; i++){
+		var bmp = bmpList[i];
+		clearTimeout(deathTimer[i]);
+		resetDuck(bmp);
+	}
+	stage.update();
+	canvas.onclick = handleClick;
+}
+
+function handleClick(){
+	canvas.onclick = null;
+	stage.removeChild(gameTxt);
+	score = 0;	
+	shots = 3;
+	play = true;
+}
+</script>
+</head>
+
+<body onLoad="init();">
+<canvas style="border:2px solid; background:#62c0d3" id="canvas" width="900" height="542"></canvas>
+
+</body>
+</html>

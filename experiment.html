@@ -43,312 +43,312 @@ var started2;
 
 
 function init(){
-	canvas = document.getElementById("canvas");
-	stage = new createjs.Stage(canvas);
-	score = 0;
-	shots =3;
-	speedX=5;
-	speedY=-5;
-	speedX2=8;
-	speedY2=-4;
-	speedX3=7;
-	speedY3=-2;
-	
-	
-	deathTimer =[];
-	
-	
-	canvas.addEventListener("click", shotFiredEvent);
-	
-	var duck = new Image();
-	duck.src = "img/theDuck.png";
-	duck.onload = createDucks;
-	
-	img = new Image();
-	img.src = "images/back2.png";
-	img.onload = setBG;
-	
+        canvas = document.getElementById("canvas");
+        stage = new createjs.Stage(canvas);
+        score = 0;
+        shots =3;
+        speedX=5;
+        speedY=-5;
+        speedX2=8;
+        speedY2=-4;
+        speedX3=7;
+        speedY3=-2;
+        
+        
+        deathTimer =[];
+        
+        
+        canvas.addEventListener("click", shotFiredEvent);
+        
+        var duck = new Image();
+        duck.src = "img/theDuck.png";
+        duck.onload = createDucks;
+        
+        img = new Image();
+        img.src = "images/back2.png";
+        img.onload = setBG;
+        
 
 
-	var test = new Image();
-	test.src = "images/largeTree.png";
-	test.onload = addTreeAndText;
-	
-	
-	
-	
+        var test = new Image();
+        test.src = "images/largeTree.png";
+        test.onload = addTreeAndText;
+        
+        
+        
+        
 }
 
 function addTreeAndText(event)
 {
-	var image = event.target;
-	var bitmap;
-	var container = new createjs.Container();
-	stage.addChild(container);
+        var image = event.target;
+        var bitmap;
+        var container = new createjs.Container();
+        stage.addChild(container);
 
-	bitmap = new createjs.Bitmap(image);
-	container.addChild(bitmap);
-	bitmap.x = 340;
-	bitmap.y = 415;
-	bitmap.regX = bitmap.image.width;
-	bitmap.regY = bitmap.image.height;
-	
-	scoreTxt = new createjs.Text("Score 0", "24px Arial", "#FFF");
-	scoreTxt.textBaseLine = "top";
-	scoreTxt.x = 755;
-	scoreTxt.y = 460;
-	container.addChild(scoreTxt);
-	
-	shotsTxt = new createjs.Text("Shots 3", "24px Arial", "#FFF");
-	shotsTxt.textBaseLine = "top";
-	shotsTxt.x = 120;
-	shotsTxt.y = 460;
-	container.addChild(shotsTxt);
+        bitmap = new createjs.Bitmap(image);
+        container.addChild(bitmap);
+        bitmap.x = 340;
+        bitmap.y = 415;
+        bitmap.regX = bitmap.image.width;
+        bitmap.regY = bitmap.image.height;
+        
+        scoreTxt = new createjs.Text("Score 0", "24px Arial", "#FFF");
+        scoreTxt.textBaseLine = "top";
+        scoreTxt.x = 755;
+        scoreTxt.y = 460;
+        container.addChild(scoreTxt);
+        
+        shotsTxt = new createjs.Text("Shots 3", "24px Arial", "#FFF");
+        shotsTxt.textBaseLine = "top";
+        shotsTxt.x = 120;
+        shotsTxt.y = 460;
+        container.addChild(shotsTxt);
 }
 
 function createDucks(event){
-	var container = new createjs.Container();
-	stage.addChild(container);
-	
-	var data = {
-		images: [event.target],
-		frames: {width: 75, height: 73},
-		animations: {"flyingTopLeft":[0,2, "flyingTopLeft", 0.5],
-					 "flyingLeft":[9,10, "flyingLeft", 0.5],
-					 "flyingTopRight":[3,5, "flyingTopRight", 0.5],
-					 "flyingRight":[6,8, "flyingRight", 0.5],
-					  "shot":[12],
-					  "die":[15,17]}
-	};
-	var spriteSheet = new createjs.SpriteSheet(data);
-	
-	var l = 3;
-	bmpList = [];
-	for(var i=0; i<l; i++){
-		theDuck = new createjs.Sprite(spriteSheet, "flyingTopRight");
-		
-		var clickable = new createjs.Shape();
-		clickable.graphics.beginFill("#000").drawRect(0,0,200,200);
-		theDuck.hitArea = clickable;
-		//theDuck.setTransform(170, 330, 1, 1);
-		theDuck.setTransform(280, 280, 1, 1);
-		theDuck.framerate = 30;
-		container.addChild(theDuck);
-		theDuck.name = i;
-		theDuck.mouseEnabled = true;
-		theDuck.addEventListener("click", duckShotEvent); 
-		bmpList.push(theDuck);
-	}
-	
-	play = true;
-	createjs.Ticker.addEventListener("tick", handleTick);
+        var container = new createjs.Container();
+        stage.addChild(container);
+        
+        var data = {
+                images: [event.target],
+                frames: {width: 75, height: 73},
+                animations: {"flyingTopLeft":[0,2, "flyingTopLeft", 0.5],
+                                         "flyingLeft":[9,10, "flyingLeft", 0.5],
+                                         "flyingTopRight":[3,5, "flyingTopRight", 0.5],
+                                         "flyingRight":[6,8, "flyingRight", 0.5],
+                                          "shot":[12],
+                                          "die":[15,17]}
+        };
+        var spriteSheet = new createjs.SpriteSheet(data);
+        
+        var l = 3;
+        bmpList = [];
+        for(var i=0; i<l; i++){
+                theDuck = new createjs.Sprite(spriteSheet, "flyingTopRight");
+                
+                var clickable = new createjs.Shape();
+                clickable.graphics.beginFill("#000").drawRect(0,0,200,200);
+                theDuck.hitArea = clickable;
+                //theDuck.setTransform(170, 330, 1, 1);
+                theDuck.setTransform(280, 280, 1, 1);
+                theDuck.framerate = 30;
+                container.addChild(theDuck);
+                theDuck.name = i;
+                theDuck.mouseEnabled = true;
+                theDuck.addEventListener("click", duckShotEvent); 
+                bmpList.push(theDuck);
+        }
+        
+        play = true;
+        createjs.Ticker.addEventListener("tick", handleTick);
 }
 
 
 function resetDuck(duck){
-	duck.stop();
-	duck.setTransform(280, 280, 1, 1);
-	duck.speed = (Math.random() * 5) + 2;
-	duck.gotoAndPlay("flyingTopRight"); 
-	duck.addEventListener("click",duckShotEvent);
+        duck.stop();
+        duck.setTransform(280, 280, 1, 1);
+        duck.speed = (Math.random() * 5) + 2;
+        duck.gotoAndPlay("flyingTopRight"); 
+        duck.addEventListener("click",duckShotEvent);
 }
 
 function setBG(event){
-	bg = new createjs.Bitmap(img);
-	stage.addChild(bg);
-	stage.addChild(text);
-	stage.update();
+        bg = new createjs.Bitmap(img);
+        stage.addChild(bg);
+        stage.addChild(text);
+        stage.update();
 }
 
 function duckShotEvent(evt) {
-	//alert(evt.target.name);
-//	resetDuck(evt.target);
-	evt.target.gotoAndPlay("shot");
-	evt.target.framerate = 30;
-	score +=50;
-	var xPos = evt.target.x;
-	var yPos = evt.target.y;
-	
-	deathTimer[evt.target.name] = setTimeout(function() { duckDie(evt.target) }, 1000);
-	evt.target.x -= 5;
-	stage.update();
+        //alert(evt.target.name);
+//        resetDuck(evt.target);
+        evt.target.gotoAndPlay("shot");
+        evt.target.framerate = 30;
+        score +=50;
+        var xPos = evt.target.x;
+        var yPos = evt.target.y;
+        
+        deathTimer[evt.target.name] = setTimeout(function() { duckDie(evt.target) }, 1000);
+        evt.target.x -= 5;
+        stage.update();
 }
 
 function duckDie(duck){
-	duck.gotoAndPlay("die");
-	stage.update();
+        duck.gotoAndPlay("die");
+        stage.update();
 }
 
 function shotFiredEvent(evt)
 {
-	shots-=1;	
+        shots-=1;        
 }
 
 function handleTick(event){
-	if(play == true){
-		/*
-		var l = bmpList.length;
-		for(var i=0; i<l; i++){
-			var bmp = bmpList[i];
-			bmp.x +=speedX+i;
-			bmp.y +=speedY-2*i;
-		/*	if(bmp.x > -100){
-				bmp.x -= speedX;
-				bmp.y +=speedY;
-			}
-			else{
-				resetDuck(bmp);	
-			}
-		}
-		*/
-					//alert(bmpList[0].currentAnimation);
+        if(play == true){
+                /*
+                var l = bmpList.length;
+                for(var i=0; i<l; i++){
+                        var bmp = bmpList[i];
+                        bmp.x +=speedX+i;
+                        bmp.y +=speedY-2*i;
+                /*        if(bmp.x > -100){
+                                bmp.x -= speedX;
+                                bmp.y +=speedY;
+                        }
+                        else{
+                                resetDuck(bmp);        
+                        }
+                }
+                */
+                                        //alert(bmpList[0].currentAnimation);
 
-		var anim = 	bmpList[0].currentAnimation;
-		var anim2 = bmpList[1].currentAnimation;
-		var anim3 = bmpList[2].currentAnimation;
-		
-		//duck1
-		if(anim == "shot"){
-			bmpList[0].x = bmpList[0].x;
-			bmpList[0].y = bmpList[0].y;
-			bmpList[0].removeEventListener("click", duckShotEvent);
-			
-		} else if(anim == "die"){
-			bmpList[0].y +=10;
-			bmpList[0].removeEventListener("click", duckShotEvent);
-		} 
-		
-		if(bmpList[0].x > canvas.width-75){
-			reachedRight = true;
-			started = false;
-		}
-		if(bmpList[0].x < 75){
-			reachedRight = false;
-			started = false;
-		}
-		
-		if(reachedRight == false){
-			bmpList[0].x +=speedX;
-			bmpList[0].y +=speedY;
-			startAnim(bmpList[0], "flyingTopRight");
-		} else if (reachedRight == true){
-			bmpList[0].x -=speedX;
-			bmpList[0].y +=speedY;
-			startAnim(bmpList[0], "flyingTopLeft");
-		}
-		//duck2
-		if(anim2 == "shot"){
-			bmpList[1].x = bmpList[1].x;
-			bmpList[1].y = bmpList[1].y;
-			bmpList[1].removeEventListener("click", duckShotEvent);
-			
-		} else if(anim2 == "die"){
-			bmpList[1].y +=10;
-			bmpList[1].removeEventListener("click", duckShotEvent);
-		} 
-		
-		if(bmpList[1].x > canvas.width-75){
-			reachedRight2 = true;
-			started2 = false;
-		}
-		if(bmpList[1].x < 75){
-			reachedRight2 = false;
-			started2 = false;
-		}
-		
-		if(reachedRight2 == false){
-			bmpList[1].x +=speedX2;
-			bmpList[1].y +=speedY2;
-			startAnim(bmpList[1], "flyingTopRight");
-		} else if (reachedRight2 == true){
-			bmpList[1].x -=speedX2;
-			bmpList[1].y +=speedY2;
-			startAnim(bmpList[1], "flyingTopLeft");
-		}
-		
-		//duck3
-		if(anim3 == "shot"){
-			bmpList[2].x = bmpList[2].x;
-			bmpList[2].y = bmpList[2].y;
-			bmpList[2].removeEventListener("click", duckShotEvent);
-			
-		} else if(anim3 == "die"){
-			bmpList[2].y +=10;
-			bmpList[2].removeEventListener("click", duckShotEvent);
-		} 
-		if(bmpList[2].x > canvas.width-75){
-			reachedRight3 = true;
-			started3 = false;
-		}
-		if(bmpList[2].x < 75){
-			reachedRight3 = false;
-			started3 = false;
-		}
-		
-		if(reachedRight3 == false){
-			bmpList[2].x +=speedX3;
-			bmpList[2].y +=speedY3;
-			startAnim(bmpList[2], "flyingTopRight");
-		} else if (reachedRight3 == true){
-			bmpList[2].x -=speedX3;
-			bmpList[2].y +=speedY3;
-			startAnim(bmpList[2], "flyingTopLeft");
-		}
-		
-		var l = bmpList.length;
-		for(var i=0; i<l; i++){
-			var bmp = bmpList[i];
-			if(bmp.x > canvas.width-40)
-			{
-				bmp.x = !bmp.x;
-			}
-			if(bmp.y <0 || bmp.y > canvas.height)
-			{
-				speedY *=-1;
-			}
-		}
-		
-		if(shots==0)
-		{
-			gameOver();	
-		}
-	}
-	scoreTxt.text =  score;
-	shotsTxt.text =  shots;
-	stage.update(event);
+                var anim =         bmpList[0].currentAnimation;
+                var anim2 = bmpList[1].currentAnimation;
+                var anim3 = bmpList[2].currentAnimation;
+                
+                //duck1
+                if(anim == "shot"){
+                        bmpList[0].x = bmpList[0].x;
+                        bmpList[0].y = bmpList[0].y;
+                        bmpList[0].removeEventListener("click", duckShotEvent);
+                        
+                } else if(anim == "die"){
+                        bmpList[0].y +=10;
+                        bmpList[0].removeEventListener("click", duckShotEvent);
+                } 
+                
+                if(bmpList[0].x > canvas.width-75){
+                        reachedRight = true;
+                        started = false;
+                }
+                if(bmpList[0].x < 75){
+                        reachedRight = false;
+                        started = false;
+                }
+                
+                if(reachedRight == false){
+                        bmpList[0].x +=speedX;
+                        bmpList[0].y +=speedY;
+                        startAnim(bmpList[0], "flyingTopRight");
+                } else if (reachedRight == true){
+                        bmpList[0].x -=speedX;
+                        bmpList[0].y +=speedY;
+                        startAnim(bmpList[0], "flyingTopLeft");
+                }
+                //duck2
+                if(anim2 == "shot"){
+                        bmpList[1].x = bmpList[1].x;
+                        bmpList[1].y = bmpList[1].y;
+                        bmpList[1].removeEventListener("click", duckShotEvent);
+                        
+                } else if(anim2 == "die"){
+                        bmpList[1].y +=10;
+                        bmpList[1].removeEventListener("click", duckShotEvent);
+                } 
+                
+                if(bmpList[1].x > canvas.width-75){
+                        reachedRight2 = true;
+                        started2 = false;
+                }
+                if(bmpList[1].x < 75){
+                        reachedRight2 = false;
+                        started2 = false;
+                }
+                
+                if(reachedRight2 == false){
+                        bmpList[1].x +=speedX2;
+                        bmpList[1].y +=speedY2;
+                        startAnim(bmpList[1], "flyingTopRight");
+                } else if (reachedRight2 == true){
+                        bmpList[1].x -=speedX2;
+                        bmpList[1].y +=speedY2;
+                        startAnim(bmpList[1], "flyingTopLeft");
+                }
+                
+                //duck3
+                if(anim3 == "shot"){
+                        bmpList[2].x = bmpList[2].x;
+                        bmpList[2].y = bmpList[2].y;
+                        bmpList[2].removeEventListener("click", duckShotEvent);
+                        
+                } else if(anim3 == "die"){
+                        bmpList[2].y +=10;
+                        bmpList[2].removeEventListener("click", duckShotEvent);
+                } 
+                if(bmpList[2].x > canvas.width-75){
+                        reachedRight3 = true;
+                        started3 = false;
+                }
+                if(bmpList[2].x < 75){
+                        reachedRight3 = false;
+                        started3 = false;
+                }
+                
+                if(reachedRight3 == false){
+                        bmpList[2].x +=speedX3;
+                        bmpList[2].y +=speedY3;
+                        startAnim(bmpList[2], "flyingTopRight");
+                } else if (reachedRight3 == true){
+                        bmpList[2].x -=speedX3;
+                        bmpList[2].y +=speedY3;
+                        startAnim(bmpList[2], "flyingTopLeft");
+                }
+                
+                var l = bmpList.length;
+                for(var i=0; i<l; i++){
+                        var bmp = bmpList[i];
+                        if(bmp.x > canvas.width-40)
+                        {
+                                bmp.x = !bmp.x;
+                        }
+                        if(bmp.y <0 || bmp.y > canvas.height)
+                        {
+                                speedY *=-1;
+                        }
+                }
+                
+                if(shots==0)
+                {
+                        gameOver();        
+                }
+        }
+        scoreTxt.text =  score;
+        shotsTxt.text =  shots;
+        stage.update(event);
 }
 
 function startAnim(duck, anim){
-	if(started == false){
-		duck.gotoAndPlay(anim);	
-		started=true;
-	}
+        if(started == false){
+                duck.gotoAndPlay(anim);        
+                started=true;
+        }
 }
 
 function gameOver(){
-	gameTxt = new createjs.Text("Game Over\n\n", "36px Arial", "#666");
-	gameTxt.text += "Click to play again";
-	gameTxt.textAlign = "center";
-	gameTxt.x = canvas.width / 2;
-	gameTxt.y = canvas.height / 3;
-	stage.addChild(gameTxt);
-	play = false;
-	var l = bmpList.length;
-	for(var i=0; i<l; i++){
-		var bmp = bmpList[i];
-		clearTimeout(deathTimer[i]);
-		resetDuck(bmp);
-	}
-	stage.update();
-	canvas.onclick = handleClick;
+        gameTxt = new createjs.Text("Game Over\n\n", "36px Arial", "#666");
+        gameTxt.text += "Click to play again";
+        gameTxt.textAlign = "center";
+        gameTxt.x = canvas.width / 2;
+        gameTxt.y = canvas.height / 3;
+        stage.addChild(gameTxt);
+        play = false;
+        var l = bmpList.length;
+        for(var i=0; i<l; i++){
+                var bmp = bmpList[i];
+                clearTimeout(deathTimer[i]);
+                resetDuck(bmp);
+        }
+        stage.update();
+        canvas.onclick = handleClick;
 }
 
 function handleClick(){
-	canvas.onclick = null;
-	stage.removeChild(gameTxt);
-	score = 0;	
-	shots = 3;
-	play = true;
+        canvas.onclick = null;
+        stage.removeChild(gameTxt);
+        score = 0;        
+        shots = 3;
+        play = true;
 }
 </script>
 </head>
