@@ -54,7 +54,7 @@ function init(){
 	canvas.addEventListener("click", shotFiredEvent);
 	
 	var duck = new Image();
-	duck.src = "img/theDuck.png";
+	duck.src = "images/theDuck2.png";
 	duck.onload = createDucks;
 	
 	img = new Image();
@@ -103,7 +103,7 @@ function createDucks(event){
 	
 	var data = {
 		images: [event.target],
-		frames: {width: 75, height: 73},
+		frames: {width: 74, height: 71},
 		animations: {"flyingTopLeft":[0,2, "flyingTopLeft", 0.5],
 					 "flyingLeft":[9,10, "flyingLeft", 0.5],
 					 "flyingTopRight":[3,5, "flyingTopRight", 0.5],
@@ -118,13 +118,13 @@ function createDucks(event){
 	for(var i=0; i<l; i++){
 		theDuck = new createjs.Sprite(spriteSheet, "flyingTopRight");
 			
-		speedX[i] = (Math.random() * 24)%10 + 12;
-		speedY[i] = (Math.random() * 15)%8 + 8;
+		speedX[i] = (Math.random() * 24)%10 + 8;
+		speedY[i] = (Math.random() * 15)%8 + 6;
 		var clickable = new createjs.Shape();
-		clickable.graphics.beginFill("#000").drawRect(0,0,200,200);
+		clickable.graphics.beginFill("#000").drawRect(0,0,100,100);
 		theDuck.hitArea = clickable;
 		//theDuck.setTransform(170, 330, 1, 1);
-		theDuck.setTransform(170, 280-(i*15), 1, 1);
+		theDuck.setTransform(170, 280-(i*40), 1, 1);
 		theDuck.framerate = 30;
 		container.addChild(theDuck);
 		theDuck.name = i;
@@ -141,9 +141,9 @@ function createDucks(event){
 
 function resetDuck(duck){
 	duck.stop();
-	duck.setTransform(170, 280-(duck.name*19), 1, 1);
-	speedY[duck.name] = (Math.random() * 24)%10 + 12;
-	speedX[duck.name] = (Math.random() * 15)%8 + 8;
+	duck.setTransform(170, 280-(duck.name*23), 1, 1);
+	speedY[duck.name] = (Math.random() * 24)%10 + 8;
+	speedX[duck.name] = (Math.random() * 15)%8 + 6;
 	duck.gotoAndPlay("flyingTopRight"); 
 	duck.addEventListener("click",duckShotEvent);
 }
@@ -270,7 +270,6 @@ function gameOver(){
 	for(var i=0; i<l; i++){
 		var bmp = bmpList[i];
 		clearTimeout(deathTimer[i]);
-		resetDuck(bmp);
 	}
 	stage.update();
 	canvas.onclick = handleClick;
@@ -281,6 +280,11 @@ function handleClick(){
 	stage.removeChild(gameTxt);
 	score = 0;	
 	shots = 3;
+	var l = bmpList.length;
+	for(var i=0; i<l; i++){
+		var bmp = bmpList[i];
+		resetDuck(bmp);
+	}
 	play = true;
 }
 </script>
